@@ -110,6 +110,11 @@ public class EnvVarsSettingsFragment extends Fragment {
         Type listType = new TypeToken<ArrayList<AdapterEnvVar.EnvVar>>() {}.getType();
         ArrayList<AdapterEnvVar.EnvVar> envVarsList = gson.fromJson(json, listType);
 
-        return (envVarsList != null ? envVarsList : new ArrayList<>());
+        if (envVarsList != null ? envVarsList : new ArrayList<>());
+
+        if (envVarsList.stream().noneMatch(envVar -> envVar.key.equals("DXVK_ASYNC"))) {
+            envVarsList.add(new AdapterEnvVar.EnvVar("DXVK_ASYNC", "1"));
+        }
+        return envVarsList;
     }
 }
