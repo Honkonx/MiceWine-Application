@@ -76,16 +76,22 @@ public class ControllerPresetManagerFragment extends Fragment {
     }
 
     private void setAdapter() {
-        recyclerView.setAdapter(new AdapterPreset(presetListNames, requireContext(), requireActivity().getSupportFragmentManager()));
+        recyclerView.setAdapter(new AdapterPreset(presetListAdapters, requireContext(), requireActivity().getSupportFragmentManager()));
+
+        presetListAdapters.clear();
+        presetList.forEach((i) -> presetListAdapters.add(
+                new AdapterPreset.Item(i.name, CONTROLLER_PRESET, true)
+        ));
     }
 
-    private final static ArrayList<AdapterPreset.Item> presetListNames = new ArrayList<>();
-    private final static ArrayList<ControllerPreset> presetList = new ArrayList<>();
+    private final static ArrayList<AdapterPreset.Item> presetListAdapters = new ArrayList<>();
+    private static ArrayList<ControllerPreset> presetList = new ArrayList<>();
     private static boolean editShortcut = false;
     private final static Type listType = new TypeToken<ControllerPreset>() {}.getType();
 
     public static void initialize(boolean editable) {
         editShortcut = editable;
+        presetList = getControllerPresets();
     }
 
     public static int getMouseSensibility(String name) {
@@ -197,7 +203,7 @@ public class ControllerPresetManagerFragment extends Fragment {
         presetList.add(
                 new ControllerPreset(name)
         );
-        presetListNames.add(
+        presetListAdapters.add(
                 new AdapterPreset.Item(name, CONTROLLER_PRESET, true, editShortcut)
         );
 
@@ -215,7 +221,7 @@ public class ControllerPresetManagerFragment extends Fragment {
         if (index == -1) return;
 
         presetList.remove(index);
-        presetListNames.remove(index);
+        presetListAdapters.remove(index);
 
         saveControllerPresets();
 
@@ -242,7 +248,7 @@ public class ControllerPresetManagerFragment extends Fragment {
         if (index == -1) return;
 
         presetList.get(index).name = newName;
-        presetListNames.get(index).titleSettings = newName;
+        presetListAdapters.get(index).titleSettings = newName;
 
         saveControllerPresets();
 
@@ -288,7 +294,7 @@ public class ControllerPresetManagerFragment extends Fragment {
         preset.name = presetName;
 
         presetList.add(preset);
-        presetListNames.add(
+        presetListAdapters.add(
                 new AdapterPreset.Item(preset.name, CONTROLLER_PRESET, true)
         );
 
